@@ -1,0 +1,76 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x3bfE7d40604c6f2dD1007429DE41bbf0aF67dFFf",
+    "txHash": "0xe6f2f040f086a7a6f642ee222feeae26c8aeb79a4d1a3d6d168ed4c68939aac6"
+  },
+  "proxies": [
+    {
+      "address": "0x90ae301b067a3694b3754EAFe9788aD5F6393D09",
+      "txHash": "0xe97a70bb39cf202b03430a92959d75614961ad71daa2a73e2c06861b24d3c28d",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "e9015038403121e18d4592318f45fbf2c078ae86bcc20f2298d06e7c73ddfaf7": {
+      "address": "0x95fE07104946632311f78e0A123E25503D442f0c",
+      "txHash": "0xd03bd5ad60d2f9482226f822ae75679993f205e4ff9ebf62ec21f553cd2f3990",
+      "layout": {
+        "solcVersion": "0.8.10",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:88"
+          }
+        ],
+        "types": {
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}
