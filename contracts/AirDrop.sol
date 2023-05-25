@@ -6,6 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
+/// @dev Custom Errors
+error SizeofRecipientsAndValuesArrayNotEqual();
+error CannotSendZeroAmountToEachAddress();
+
 contract Airdrop is Initializable, ReentrancyGuardUpgradeable {
     event airdropSuccessful(address owner, uint amount);
 
@@ -24,7 +28,9 @@ contract Airdrop is Initializable, ReentrancyGuardUpgradeable {
         uint256[] calldata values
     ) external payable nonReentrant {
         /// @dev Parameter checking.
-        require(recipients.length == values.length, "ArraySizeShouldBeSame");
+
+        if (recipients.length != values.length)
+            revert SizeofRecipientsAndValuesArrayNotEqual();
 
         uint256 amount;
 
@@ -54,7 +60,8 @@ contract Airdrop is Initializable, ReentrancyGuardUpgradeable {
     ) external payable nonReentrant {
         /// @dev Getting the amount per address.
         uint256 airdropPerAddress = msg.value / recipients.length;
-        require(airdropPerAddress > 0, "ETHPerAddressShouldBeMoreThanZero");
+
+        if (airdropPerAddress == 0) revert CannotSendZeroAmountToEachAddress();
 
         /// @dev Dispersing ETH to addresses.
         for (uint256 i = 0; i < recipients.length; i++) {
@@ -83,7 +90,8 @@ contract Airdrop is Initializable, ReentrancyGuardUpgradeable {
         uint256[] calldata values
     ) external nonReentrant {
         /// @dev Parameter checking.
-        require(recipients.length == values.length, "ArraySizeShouldBeSame");
+        if (recipients.length != values.length)
+            revert SizeofRecipientsAndValuesArrayNotEqual();
 
         uint256 amount;
         /// @dev Dispersing TOKEN to addresses.
@@ -113,7 +121,7 @@ contract Airdrop is Initializable, ReentrancyGuardUpgradeable {
     ) external nonReentrant {
         /// @dev Getting the amount per address.
         uint256 airdropPerAddress = value / recipients.length;
-        require(airdropPerAddress > 0, "TokenPerAddressShouldBeMoreThanZero");
+        if (airdropPerAddress == 0) revert CannotSendZeroAmountToEachAddress();
 
         /// @dev Dispersing TOKEN to addresses.
         for (uint256 i = 0; i < recipients.length; i++) {

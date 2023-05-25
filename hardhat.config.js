@@ -4,8 +4,6 @@ require("@openzeppelin/hardhat-upgrades");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.10",
-  version: "0.8.10",
   solidity: {
     version: "0.8.10",
     settings: {
@@ -13,14 +11,13 @@ module.exports = {
         enabled: true,
         runs: 200,
       },
-      // viaIR: true, /// This one
     },
   },
   networks: {
     hardhat: {
       accounts: {
-        count: 25, // Number of testing accounts
-        initialBalance: "5000000000000000000", // Amount of Ether in each testing account (5 Ether)
+        count: 25,
+        initialBalance: "5000000000000000000",
       },
       forking: {
         url: "https://bsc-dataseed.binance.org/",
@@ -46,11 +43,5 @@ module.exports = {
     gasPrice: 20,
     enabled: false,
     coinmarketcap: process.env.COINMARTKETCAP_API,
-    excludeContracts: [
-      "Token",
-      "PairContract",
-      "UniswapFactory",
-      "UniswapPair",
-    ],
   },
 };
