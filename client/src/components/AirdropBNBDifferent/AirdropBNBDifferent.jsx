@@ -1,14 +1,13 @@
-import "./SendAirdrop.css";
 import React, { useState } from "react";
+import "./AirdropBNBDifferent.css";
 
-const SendAirdrop = ({ state }) => {
+const AirdropBNBDifferent = ({ state }) => {
   const { contract } = state;
 
   const validateAddress = (address) => {
     const addressRegex = /^(0x)?[0-9a-fA-F]{40}$/;
     return addressRegex.test(address);
   };
-
   const [formData, setFormData] = useState({
     addresses: "",
     amount: "",
@@ -22,33 +21,38 @@ const SendAirdrop = ({ state }) => {
     }));
   };
 
-  const sendAirdrop = async (e) => {
+  const sendAirdrop = async (event) => {
     try {
-      e.preventDefault();
+      event.preventDefault();
+
       if (!contract) {
         alert("Please Connect Your Wallet first");
         return;
       }
 
-      const addressesString = formData.addresses;
-      const amount = formData.amount;
-
-      if (amount === "" || amount === "0") {
-        alert("Enter a valid amount");
-        return;
-      }
-
-      if (addressesString === "") {
+      if (formData.addresses === "") {
         alert("Enter one address at least");
         return;
       }
 
-      const addressesArray = addressesString.split("#");
+      if (formData.amount === "") {
+        alert("Amount not correct");
+        return;
+      }
+
+      const addressesArray = formData.addresses.split("#");
+      const amountArray = formData.amount.split("#");
+
+      if (addressesArray.length !== amountArray.length) {
+        alert("Addresses and Amount values are not same");
+        return;
+      }
 
       if (addressesArray.length > 500) {
         alert("You can airdrop to 500 addresses at a time");
         return;
       }
+
       addressesArray.forEach((address) => {
         if (!validateAddress(address)) {
           alert("One or more invalid address..Please check and try again!");
@@ -56,9 +60,26 @@ const SendAirdrop = ({ state }) => {
         }
       });
 
-      const tx = await contract.aidropSameEtherToAddresses(addressesArray, {
-        value: amount,
+      let totalAmountToBeTaken = 0;
+
+      amountArray.forEach((amount) => {
+        amount *= 1;
+
+        totalAmountToBeTaken = totalAmountToBeTaken + amount;
+
+        if (amount <= 0) {
+          alert("One of the amount is less than or equal to zero");
+          return;
+        }
       });
+
+      const tx = await contract.aidropDifferentEtherToAddresses(
+        addressesArray,
+        amountArray,
+        {
+          value: totalAmountToBeTaken,
+        }
+      );
       const receipt = await tx.wait();
       if (receipt && receipt.status === 1) {
         alert("Airdrop Sent Successfully");
@@ -73,6 +94,7 @@ const SendAirdrop = ({ state }) => {
       alert(error.message);
     }
   };
+
   return (
     <div className="form-container">
       <form onSubmit={sendAirdrop}>
@@ -80,18 +102,20 @@ const SendAirdrop = ({ state }) => {
           className="addresses-input"
           type="text"
           name="addresses"
-          placeholder="Enter Addresses seprate by #"
+          placeholder="Enter addresses seprated by #"
           value={formData.addresses}
           onChange={handleChange}
         />
+
         <input
-          className="amount-input"
-          type="number"
+          className="different-amount-input"
+          type="text"
           name="amount"
-          placeholder="Amount in wei"
+          placeholder="Enter Amount seprated by #"
           value={formData.amount}
           onChange={handleChange}
         />
+
         <button className="button" type="submit">
           Send Airdrop
         </button>
@@ -100,4 +124,4 @@ const SendAirdrop = ({ state }) => {
   );
 };
 
-export default SendAirdrop;
+export default AirdropBNBDifferent;

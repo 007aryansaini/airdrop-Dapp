@@ -9,7 +9,7 @@ const Header = ({ saveState }) => {
       <Link to={"/"} id="name">
         <h1>Crypto Drop</h1>
       </Link>
-      <Link to={"/simple-airdrop"}>Simple Airdrop</Link>
+
       <Wallet saveState={saveState}></Wallet>
     </nav>
   );

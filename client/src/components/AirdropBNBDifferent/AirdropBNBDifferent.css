@@ -1,0 +1,7 @@
+.different-amount-input {
+  min-height: 100px;
+  min-width: 400px;
+  border-radius: 15px;
+  padding: 3px;
+  overflow: scroll;
+}
