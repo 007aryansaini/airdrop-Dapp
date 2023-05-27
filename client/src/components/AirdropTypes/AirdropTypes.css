@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.airdrop-types-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #ffeaff;
+  padding: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.types-heading {
+  background-color: #cdb4db;
+  padding: 6px;
+  text-decoration: none;
+  border-radius: 10px;
+  color: black;
+  font-weight: bold;
+  box-shadow: 1px 1px #8b8b8b;
+}
