@@ -1,0 +1,6 @@
+.token-input {
+  min-height: 50px;
+  min-width: 400px;
+  border-radius: 15px;
+  padding: 3px;
+}

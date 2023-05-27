@@ -5,23 +5,54 @@ import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import AirdropTypes from "./components/AirdropTypes/AirdropTypes";
 import AirdropBNBDifferent from "./components/AirdropBNBDifferent/AirdropBNBDifferent";
+import AirdropEqualToken from "./components/AirdropEqualToken/AirdropEqualToken";
 
 const App = () => {
   const [state, setState] = useState({
     signer: null,
     contract: null,
+    contractApproveToken: null,
   });
 
+  const [balance, setBalance] = useState(0);
+  const [userAddress, setUserAddress] = useState(null);
+
+  const saveUserAddress = (newUserAddress) => {
+    setUserAddress(newUserAddress);
+  };
+
+  const saveBalance = (newBalance) => {
+    setBalance(newBalance);
+  };
   const saveState = (state) => {
     setState(state);
   };
   return (
     <Router>
-      <Header saveState={saveState} />
+      <Header
+        saveState={saveState}
+        balance={balance}
+        saveBalance={saveBalance}
+        userAddress={userAddress}
+        saveUserAddress={saveUserAddress}
+      />
       <AirdropTypes />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/simple-airdrop" element={<SendAirdrop state={state} />} />
+        <Route
+          path="/simple-airdrop"
+          element={
+            <SendAirdrop
+              state={state}
+              saveBalance={saveBalance}
+              userAddress={userAddress}
+            />
+          }
+        />
+        <Route
+          path="/simple-airdrop-token"
+          element={<AirdropEqualToken state={state} />}
+        />
         <Route
           path="/different-BNB-airdrop"
           element={<AirdropBNBDifferent state={state} />}

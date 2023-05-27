@@ -1,9 +1,9 @@
-import "./SendAirdrop.css";
+import "./AirdropEqualToken.css";
 import React, { useState } from "react";
-import { ethers } from "ethers";
 
-const SendAirdrop = ({ state, saveBalance, userAddress }) => {
-  const { contract } = state;
+const AirdropEqualToken = ({ state }) => {
+  const { contract, contractApproveToken } = state;
+  const [approved, setApproved] = useState(false);
 
   const validateAddress = (address) => {
     const addressRegex = /^(0x)?[0-9a-fA-F]{40}$/;
@@ -11,6 +11,7 @@ const SendAirdrop = ({ state, saveBalance, userAddress }) => {
   };
 
   const [formData, setFormData] = useState({
+    token: "",
     addresses: "",
     amount: "",
   });
@@ -31,8 +32,14 @@ const SendAirdrop = ({ state, saveBalance, userAddress }) => {
         return;
       }
 
+      const tokenAddress = formData.token;
       const addressesString = formData.addresses;
       const amount = formData.amount;
+
+      if (!validateAddress(tokenAddress)) {
+        alert("Invalid Token Address");
+        return;
+      }
 
       if (amount === "" || amount === "0") {
         alert("Enter a valid amount");
@@ -57,30 +64,40 @@ const SendAirdrop = ({ state, saveBalance, userAddress }) => {
         }
       });
 
-      const tx = await contract.aidropSameEtherToAddresses(addressesArray, {
-        value: amount,
-      });
+      if (!approved) {
+        const tx = await contractApproveToken.approveAnyTokenToAddress(
+          tokenAddress,
+          "0x90ae301b067a3694b3754EAFe9788aD5F6393D09",
+          amount
+        );
+
+        const receipt0 = await tx.wait();
+        if (receipt0 && receipt0.status === 1) {
+          alert("Tokens Approved Successfully");
+        }
+
+        setApproved(true);
+        return;
+      }
+
+      const tx = await contract.airdropSameTokenToAddresses(
+        tokenAddress,
+        addressesArray,
+        amount
+      );
       const receipt = await tx.wait();
       if (receipt && receipt.status === 1) {
         alert("Airdrop Sent Successfully");
       }
 
+      setApproved(false);
+
       // Reset form data
       setFormData({
+        token: "",
         addresses: "",
         amount: "",
       });
-
-      if (window.ethereum) {
-        let balanceOfUser = await window.ethereum.request({
-          method: "eth_getBalance",
-          params: [userAddress, "latest"],
-        });
-        balanceOfUser = parseInt(balanceOfUser, 16).toString();
-        balanceOfUser = ethers.formatEther(balanceOfUser);
-        balanceOfUser = parseFloat(balanceOfUser).toFixed(2);
-        saveBalance(balanceOfUser);
-      }
     } catch (error) {
       alert(error.message);
     }
@@ -88,6 +105,14 @@ const SendAirdrop = ({ state, saveBalance, userAddress }) => {
   return (
     <div className="form-container">
       <form onSubmit={sendAirdrop}>
+        <input
+          className="token-input"
+          type="text"
+          name="token"
+          placeholder="Enter Token Address"
+          value={formData.token}
+          onChange={handleChange}
+        />
         <input
           className="addresses-input"
           type="text"
@@ -105,11 +130,11 @@ const SendAirdrop = ({ state, saveBalance, userAddress }) => {
           onChange={handleChange}
         />
         <button className="button" type="submit">
-          Send Airdrop
+          {!approved ? <>Approve</> : <>Send Airdrop</>}
         </button>
       </form>
     </div>
   );
 };
 
-export default SendAirdrop;
+export default AirdropEqualToken;

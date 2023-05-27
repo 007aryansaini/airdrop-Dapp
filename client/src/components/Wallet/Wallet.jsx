@@ -2,13 +2,21 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import "./Wallet.css";
 import ABI from "./ABI.json";
+import approveABI from "./ABIapprove.json";
 const CONTRACT_ADDRESS = "0x90ae301b067a3694b3754EAFe9788aD5F6393D09";
+const APPROVE_CONTRACT = "0xe6e62ec1F5C66b1CA30Ad71a13fB0a0EaEA4DB90";
 
-const Wallet = ({ saveState }) => {
+const Wallet = ({
+  saveState,
+  balance,
+  saveBalance,
+  userAddress,
+  saveUserAddress,
+}) => {
   const [isMetamaskConnected, setIsMetamaskConnected] = useState(false);
-  const [defaultAccount, setDefaultAccount] = useState(null);
+  // const [defaultAccount, setDefaultAccount] = useState(null);
   const [disabled, setDisabled] = useState(false);
-  const [balance, setBalance] = useState(0);
+  // const [balance, setBalance] = useState(0);
 
   const initAccount = async () => {
     try {
@@ -37,17 +45,25 @@ const Wallet = ({ saveState }) => {
           balanceOfUser = ethers.formatEther(balanceOfUser);
           balanceOfUser = parseFloat(balanceOfUser).toFixed(2);
 
-          setDefaultAccount(accounts[0]);
+          saveUserAddress(accounts[0]);
           setIsMetamaskConnected(true);
           setDisabled(true);
-          setBalance(balanceOfUser);
+          saveBalance(balanceOfUser);
 
           const signer = await provider.getSigner();
 
           const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+
+          const contractApproveToken = new ethers.Contract(
+            APPROVE_CONTRACT,
+            approveABI,
+            signer
+          );
+
           const state = {
             signer: signer,
             contract: contract,
+            contractApproveToken,
           };
 
           saveState(state);
@@ -73,7 +89,7 @@ const Wallet = ({ saveState }) => {
       balanceOfUser = parseInt(balanceOfUser, 16).toString();
       balanceOfUser = ethers.formatEther(balanceOfUser);
       balanceOfUser = parseFloat(balanceOfUser).toFixed(2);
-      setBalance(balanceOfUser);
+      saveBalance(balanceOfUser);
     };
 
     const sendNetworkChangeRequest = async () => {
@@ -91,7 +107,7 @@ const Wallet = ({ saveState }) => {
     };
     if (window.ethereum.isConnected()) {
       window.ethereum.on("accountsChanged", (account) => {
-        setDefaultAccount(account);
+        saveUserAddress(account);
         setNewAccountBalance(account[0]);
       });
 
@@ -102,7 +118,7 @@ const Wallet = ({ saveState }) => {
         }
       });
     }
-  }, [isMetamaskConnected]);
+  }, [isMetamaskConnected, saveBalance, saveUserAddress]);
 
   return (
     <div>
@@ -112,7 +128,7 @@ const Wallet = ({ saveState }) => {
           <span> </span>tBNB
         </div>
         <div className="wallet-details">
-          {defaultAccount ? defaultAccount : "User Address"}
+          {userAddress ? userAddress : "User Address"}
         </div>
         <button
           className="wallet-submit"
