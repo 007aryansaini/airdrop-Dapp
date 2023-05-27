@@ -11,7 +11,6 @@ const App = () => {
   const [state, setState] = useState({
     signer: null,
     contract: null,
-    contractApproveToken: null,
   });
 
   const [balance, setBalance] = useState(0);
@@ -51,11 +50,23 @@ const App = () => {
         />
         <Route
           path="/simple-airdrop-token"
-          element={<AirdropEqualToken state={state} />}
+          element={
+            <AirdropEqualToken
+              state={state}
+              saveBalance={saveBalance}
+              userAddress={userAddress}
+            />
+          }
         />
         <Route
           path="/different-BNB-airdrop"
-          element={<AirdropBNBDifferent state={state} />}
+          element={
+            <AirdropBNBDifferent
+              state={state}
+              saveBalance={saveBalance}
+              userAddress={userAddress}
+            />
+          }
         />
       </Routes>
     </Router>
