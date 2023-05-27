@@ -1,9 +1,11 @@
 import "./AirdropEqualToken.css";
 import React, { useState } from "react";
+import { ethers } from "ethers";
+import ERC20ABI from "./ERC20ABI.json";
 
-const AirdropEqualToken = ({ state }) => {
-  const { contract, contractApproveToken } = state;
+const AirdropEqualToken = ({ state, saveBalance, userAddress }) => {
   const [approved, setApproved] = useState(false);
+  const { contract, signer } = state;
 
   const validateAddress = (address) => {
     const addressRegex = /^(0x)?[0-9a-fA-F]{40}$/;
@@ -27,10 +29,6 @@ const AirdropEqualToken = ({ state }) => {
   const sendAirdrop = async (e) => {
     try {
       e.preventDefault();
-      if (!contract) {
-        alert("Please Connect Your Wallet first");
-        return;
-      }
 
       const tokenAddress = formData.token;
       const addressesString = formData.addresses;
@@ -65,8 +63,14 @@ const AirdropEqualToken = ({ state }) => {
       });
 
       if (!approved) {
-        const tx = await contractApproveToken.approveAnyTokenToAddress(
+        const tokenContract = new ethers.Contract(
           tokenAddress,
+          ERC20ABI,
+          signer
+        );
+
+        console.log(tokenContract, state.signer);
+        const tx = await tokenContract.approve(
           "0x90ae301b067a3694b3754EAFe9788aD5F6393D09",
           amount
         );
@@ -98,6 +102,17 @@ const AirdropEqualToken = ({ state }) => {
         addresses: "",
         amount: "",
       });
+
+      if (window.ethereum) {
+        let balanceOfUser = await window.ethereum.request({
+          method: "eth_getBalance",
+          params: [userAddress, "latest"],
+        });
+        balanceOfUser = parseInt(balanceOfUser, 16).toString();
+        balanceOfUser = ethers.formatEther(balanceOfUser);
+        balanceOfUser = parseFloat(balanceOfUser).toFixed(2);
+        saveBalance(balanceOfUser);
+      }
     } catch (error) {
       alert(error.message);
     }

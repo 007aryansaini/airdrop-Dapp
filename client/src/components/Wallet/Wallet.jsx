@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import "./Wallet.css";
 import ABI from "./ABI.json";
-import approveABI from "./ABIapprove.json";
+
 const CONTRACT_ADDRESS = "0x90ae301b067a3694b3754EAFe9788aD5F6393D09";
-const APPROVE_CONTRACT = "0xe6e62ec1F5C66b1CA30Ad71a13fB0a0EaEA4DB90";
 
 const Wallet = ({
   saveState,
@@ -14,9 +13,7 @@ const Wallet = ({
   saveUserAddress,
 }) => {
   const [isMetamaskConnected, setIsMetamaskConnected] = useState(false);
-  // const [defaultAccount, setDefaultAccount] = useState(null);
   const [disabled, setDisabled] = useState(false);
-  // const [balance, setBalance] = useState(0);
 
   const initAccount = async () => {
     try {
@@ -54,16 +51,9 @@ const Wallet = ({
 
           const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
-          const contractApproveToken = new ethers.Contract(
-            APPROVE_CONTRACT,
-            approveABI,
-            signer
-          );
-
           const state = {
             signer: signer,
             contract: contract,
-            contractApproveToken,
           };
 
           saveState(state);

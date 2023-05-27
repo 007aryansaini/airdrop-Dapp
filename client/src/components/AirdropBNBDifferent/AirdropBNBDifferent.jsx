@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./AirdropBNBDifferent.css";
+import { ethers } from "ethers";
 
-const AirdropBNBDifferent = ({ state }) => {
+const AirdropBNBDifferent = ({ state, userAddress, saveBalance }) => {
   const { contract } = state;
 
   const validateAddress = (address) => {
@@ -90,6 +91,16 @@ const AirdropBNBDifferent = ({ state }) => {
         addresses: "",
         amount: "",
       });
+      if (window.ethereum) {
+        let balanceOfUser = await window.ethereum.request({
+          method: "eth_getBalance",
+          params: [userAddress, "latest"],
+        });
+        balanceOfUser = parseInt(balanceOfUser, 16).toString();
+        balanceOfUser = ethers.formatEther(balanceOfUser);
+        balanceOfUser = parseFloat(balanceOfUser).toFixed(2);
+        saveBalance(balanceOfUser);
+      }
     } catch (error) {
       alert(error.message);
     }
