@@ -6,6 +6,7 @@ import Home from "./components/Home/Home";
 import AirdropTypes from "./components/AirdropTypes/AirdropTypes";
 import AirdropBNBDifferent from "./components/AirdropBNBDifferent/AirdropBNBDifferent";
 import AirdropEqualToken from "./components/AirdropEqualToken/AirdropEqualToken";
+import AirdropDifferentToken from "./components/AirdropDifferentToken/AirdropDifferentToken";
 
 const App = () => {
   const [state, setState] = useState({
@@ -62,6 +63,16 @@ const App = () => {
           path="/different-BNB-airdrop"
           element={
             <AirdropBNBDifferent
+              state={state}
+              saveBalance={saveBalance}
+              userAddress={userAddress}
+            />
+          }
+        />
+        <Route
+          path="/different-airdrop-token"
+          element={
+            <AirdropDifferentToken
               state={state}
               saveBalance={saveBalance}
               userAddress={userAddress}

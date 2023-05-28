@@ -14,7 +14,7 @@ const AirdropTypes = () => {
       <Link to={"/simple-airdrop-token"} className="types-heading">
         Airdrop equal Tokens
       </Link>
-      <Link to={"/simple-airdrop"} className="types-heading">
+      <Link to={"/different-airdrop-token"} className="types-heading">
         Airdrop Different Tokens
       </Link>
     </div>
