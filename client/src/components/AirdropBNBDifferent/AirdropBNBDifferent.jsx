@@ -64,13 +64,15 @@ const AirdropBNBDifferent = ({ state, userAddress, saveBalance }) => {
       let totalAmountToBeTaken = 0;
 
       amountArray.forEach((amount) => {
+        if (amount.charAt[0] === "0" || amount.charAt(0) === "-1") {
+          alert("One of the amount is less than or equal to zero");
+          return;
+        }
         amount *= 1;
 
         totalAmountToBeTaken = totalAmountToBeTaken + amount;
 
         if (amount <= 0) {
-          alert("One of the amount is less than or equal to zero");
-          return;
         }
       });
 

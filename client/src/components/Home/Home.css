@@ -1,6 +1,21 @@
-* {
+.home-container {
+  height: 70vh;
+  background-color: #ffeaff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.home-container {
-  background-color: #ffeaff;
+.home-container img {
+  margin-top: 30px;
+  height: 300px;
+  width: 500px;
+  border-radius: 10px;
+  animation: upDownAnimation 1.5s linear infinite alternate;
+}
+
+@keyframes upDownAnimation {
+  to {
+    transform: translateY(-10px);
+  }
 }
